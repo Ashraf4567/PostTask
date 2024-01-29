@@ -29,10 +29,6 @@ class PostsActivity : AppCompatActivity() {
 
 
 
-        lifecycleScope.launch {
-            viewModel.invokeAction(PostsManager.Action.LoadPosts)
-        }
-
         viewModel.state.observe(this , ::hanldeState)
         viewModel.event.observe(this , ::handleEvents)
     }

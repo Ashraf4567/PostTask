@@ -9,6 +9,7 @@ import com.route.domain.entity.Post
 import com.route.domain.usecase.PostDetailsUseCase
 import com.route.posttask.util.ControlState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,7 +22,7 @@ ViewModel(){
     val state = MutableLiveData<ControlState>()
 
     fun fetchPostDetails(id: String){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 state.postValue(ControlState.LOADING)
                 val res = postDetailsUseCase.invoke(id)

@@ -9,6 +9,7 @@ import com.route.domain.entity.Post
 import com.route.domain.usecase.GetAllPostsUseCase
 import com.route.posttask.util.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,6 +23,10 @@ ViewModel() , PostsManager.ViewModel{
     private val _states = SingleLiveEvent<PostsManager.State>()
     override val state = _states
 
+    init {
+        invokeAction(PostsManager.Action.LoadPosts)
+    }
+
     override fun invokeAction(action: PostsManager.Action) {
         when(action){
             is PostsManager.Action.LoadPosts -> getPostsData()
@@ -31,7 +36,7 @@ ViewModel() , PostsManager.ViewModel{
 
 
     private fun getPostsData(){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 _states.postValue(PostsManager.State.Loading())
                 val res =  getAllPostsUseCase.invoke()
